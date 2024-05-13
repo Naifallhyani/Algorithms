@@ -1,0 +1,77 @@
+package uqu;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class LinearSearch {
+    public static void main(String[] args) {
+        int N = 10; // Predefined size of the array
+
+        // Generate a random array of the specified size with numbers ranging from 0 to 100
+        int[] numbers = generateRandomArray(N, 0, 100);
+
+        // Displaying the generated array
+        System.out.println("Generated array:");
+        for (int i = 0; i < N; i++) {
+            System.out.print(numbers[i] + " ");
+        }
+        System.out.println();
+
+        // Asking the user to enter the number they want to search for
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number you want to search for: ");
+        int target = scanner.nextInt();
+
+        // Calling linearSearch method to find the target
+        int index = linearSearch(numbers, target);
+
+        // Printing the result
+        if (index != -1) {
+            System.out.println("The number " + target + " is found at index " + index);
+        } else {
+            System.out.println("The number " + target + " is not found in the array.");
+        }
+
+        // Resetting the array to its original state
+        System.out.println("Array reset to its original state.");
+        for (int i = 0; i < N; i++) {
+            numbers[i] = 0; // You can reset to any predefined values here
+        }
+        
+        // Efficiency Test
+        double efficiencyTime = efficiencyTesting(numbers, target);
+        System.out.println("Efficiency Test:");
+        System.out.println("Time taken for linear search: " + efficiencyTime + " milliseconds");
+    }
+
+    // Method to perform linear search
+    public static int linearSearch(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == target) {
+                return i; // Return the index if found
+            }
+        }
+        return -1; // Return -1 if not found
+    }
+
+    // Method to generate an array of random integers
+    public static int[] generateRandomArray(int size, int min, int max) {
+        int[] arr = new int[size];
+        Random rand = new Random();
+        for (int i = 0; i < size; i++) {
+            arr[i] = rand.nextInt(max - min + 1) + min;
+        }
+        return arr;
+    }
+
+    // Method to perform efficiency testing
+    public static double efficiencyTesting(int[] numbers, int target) {
+        long startTime, endTime;
+        double duration;
+        startTime = System.currentTimeMillis();
+        linearSearch(numbers, target);
+        endTime = System.currentTimeMillis();
+        duration = endTime - startTime;
+        return duration;
+    }
+}
