@@ -1,0 +1,126 @@
+package UQU;
+
+import java.util.Random;
+
+public class MergeSort {
+
+    public static void main(String[] args) {
+        int N = 1000; // Define the size of the array
+        // Generate a random array of size N with numbers ranging from 0 to 100
+        int[] numbers = generateRandomArray(N, 0, 100);
+
+        // Displaying the generated array
+        System.out.println("Generated array:");
+        for (int i = 0; i < N; i++) {
+            System.out.print(numbers[i] + " ");
+        }
+        System.out.println();
+
+        // Sorting the array using Merge Sort
+        mergeSort(numbers);
+
+        // Displaying the sorted array
+        System.out.println("Sorted array:");
+        for (int i = 0; i < N; i++) {
+            System.out.print(numbers[i] + " ");
+        }
+        System.out.println();
+
+        // Testing the efficiency of Merge Sort
+        double duration = efficiencyTesting(numbers);
+        System.out.println("Time taken for sorting: " + duration + " milliseconds");
+    }
+
+    // Method to perform Merge Sort
+    public static void mergeSort(int inputArr[]) {
+        int[] tempMergeArr = new int[inputArr.length];
+        processMergeSort(inputArr, tempMergeArr, 0, inputArr.length - 1);
+    }
+
+    private static void processMergeSort(int array[], int tempMergeArr[], int lowerIndex, int higherIndex) {
+        if (lowerIndex < higherIndex) {
+            int middle = lowerIndex + (higherIndex - lowerIndex) / 2;
+            processMergeSort(array, tempMergeArr, lowerIndex, middle);
+            processMergeSort(array, tempMergeArr, middle + 1, higherIndex);
+            doMergeParts(array, tempMergeArr, lowerIndex, middle, higherIndex);
+        }
+    }
+
+    private static void doMergeParts(int array[], int tempMergeArr[], int lowerIndex, int middle, int higherIndex) {
+        for (int i = lowerIndex; i <= higherIndex; i++) {
+            tempMergeArr[i] = array[i];
+        }
+        int i = lowerIndex;
+        int j = middle + 1;
+        int k = lowerIndex;
+        while (i <= middle && j <= higherIndex) {
+            if (tempMergeArr[i] <= tempMergeArr[j]) {
+                array[k] = tempMergeArr[i];
+                i++;
+            } else {
+                array[k] = tempMergeArr[j];
+                j++;
+            }
+            k++;
+        }
+        while (i <= middle) {
+            array[k] = tempMergeArr[i];
+            k++;
+            i++;
+        }
+    }
+
+    // Method to generate an array of random integers
+    public static int[] generateRandomArray(int size, int min, int max) {
+        int[] arr = new int[size];
+        Random rand = new Random();
+        for (int i = 0; i < size; i++) {
+            arr[i] = rand.nextInt(max - min + 1) + min;
+        }
+        return arr;
+    }
+
+    // Method to perform efficiency testing for Merge Sort
+    public static double efficiencyTesting(int[] numbers) {
+        long startTime, endTime;
+        double duration;
+        int[] temp = new int[numbers.length]; // Temporary array for sorting
+        startTime = System.currentTimeMillis();
+        mergeSortEfficient(numbers, temp, 0, numbers.length - 1);
+        endTime = System.currentTimeMillis();
+        duration = endTime - startTime;
+        return duration;
+    }
+
+    // Improved Merge Sort implementation for efficiency testing
+    private static void mergeSortEfficient(int[] arr, int[] temp, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSortEfficient(arr, temp, left, mid);
+            mergeSortEfficient(arr, temp, mid + 1, right);
+            merge(arr, temp, left, mid, right);
+        }
+    }
+
+    // Merge two sorted subarrays
+    private static void merge(int[] arr, int[] temp, int left, int mid, int right) {
+        for (int i = left; i <= right; i++) {
+            temp[i] = arr[i];
+        }
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+
+        while (i <= mid && j <= right) {
+            if (temp[i] <= temp[j]) {
+                arr[k++] = temp[i++];
+            } else {
+                arr[k++] = temp[j++];
+            }
+        }
+
+        while (i <= mid) {
+            arr[k++] = temp[i++];
+        }
+    }
+}
